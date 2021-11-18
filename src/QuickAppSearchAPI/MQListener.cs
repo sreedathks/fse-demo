@@ -14,10 +14,12 @@ namespace QuickAppSearchAPI
     {
         private readonly ILogger<MQListener> _logger;
         private readonly IBus _busControl;
-        public MQListener(ILogger<MQListener> logger)
+        private readonly ICosmosDbService _cosmos;
+        public MQListener(ILogger<MQListener> logger, ICosmosDbService cosmos)
         {
             _logger = logger;
             _busControl = RabbitHutch.CreateBus("myrabbitmq.eastus.azurecontainer.io");
+            _cosmos = cosmos;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -32,6 +34,11 @@ namespace QuickAppSearchAPI
             foreach (var prd in products)
             {
                 _logger.LogInformation($"Queue Message: {prd.Message}");
+                Item logItem = new Item();
+                logItem.Id = Guid.NewGuid().ToString();
+                logItem.Name = $"Queue Message: {prd.Message}";
+                logItem.Time = DateTime.Now;
+                _cosmos.AddItemAsync(logItem);
             }
         }
     }
