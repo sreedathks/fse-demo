@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quickapp
+  labels:
+    app: quickapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: quickapp
+  template:
+    metadata:
+      labels:
+        app: quickapp
+        service: quickapp
+    spec:
+      containers:
+        - name: quickapp
+          image: aksfsecr.azurecr.io/quickapp:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quickapp
+  labels:
+    app: quickapp
+    service: quickapp
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: quickapp

@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  quickapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=44367
+      - ConnectionStrings:DefaultConnection=Server=tcp:fse4.database.windows.net,1433;Initial Catalog=QuickApp;Persist Security Info=False;User ID=fse_admin;Password=Azure@Sql01;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30
+      - ConnectionStrings:RedisConnection=fse264099.redis.cache.windows.net:6380,password=LNoruJVBDV7ypxdGP5nhPPga2P8ATi2WMAzCaKKOyuI=,ssl=True,abortConnect=False"
+      - SmtpConfig:Host=quickapp.mail
+      - SmtpConfig:Port=1025
+      - SmtpConfig:Username=
+      # fix for docker ssl issue
+      # RUN THIS Command in Command prompt
+      # dotnet dev-certs https -ep C:\Users\{user}\AppData\Roaming\ASP.NET\Https\QuickApp.pfx -p 348ff0ae-db78-4801-9094-52b065a1aa3b
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password="EEC316E2-29A4-4E0C-995A-1E1EC4ABBB99" 
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/QuickApp.pfx
+    ports:
+      - "6780:80"
+      - "44367:443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

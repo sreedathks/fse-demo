@@ -1,0 +1,41 @@
+<div class="container">
+    <header class="pageHeader">
+        <h3><i class="fa fa-truck fa-lg page-caption" aria-hidden="true"></i> {{'pageHeader.Products' | translate}}</h3>
+    </header>
+    <p *ngIf="!products"><em>Loading...</em></p>
+    <div [@fadeInOut]>
+        <div></div>
+        <label title="products">Products</label> 
+        <span> : </span>
+        <select class="select" id="productsList" [(ngModel)]="sel_prodoct" >
+            <option *ngFor="let product of products"   [ngValue]="product">
+                {{product.name}}
+            </option>
+        </select>
+        <button  class="button" type="submit" title="Search" (click)="GetProduct()">Search</button>
+    </div>
+    <div>
+        
+        
+
+        <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="search_product">
+        <thead>
+            <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Units in Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{ search_product.name }}</td>
+            <td>{{ search_product.description }}</td>
+            <td>{{ search_product.sellingPrice }}</td>
+            <td>{{ search_product.unitsInStock }}</td>
+            </tr>
+        </tbody>
+        </table>
+ 
+    </div>
+</div>
